@@ -9,7 +9,7 @@ const config = {
   projectId: "store-study",
   storageBucket: "store-study.appspot.com",
   messagingSenderId: "549376861768",
-  appId: "1:549376861768:web:36722c6dd1b5001520da7d"
+  appId: "1:549376861768:web:36722c6dd1b5001520da7d",
 };
 firebase.initializeApp(config);
 
@@ -36,6 +36,22 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
   }
 
   return userRef;
+};
+
+export const convertCollectionsSnapshotToMap = collections => {
+  const transformedCollection = collections.docs.map(doc => {
+    const { title, items } = doc.data();
+    return {
+      routName: encodeURI(title.toLowerCase()),
+      id: doc.id,
+      title,
+      items,
+    };
+  });
+  return transformedCollection.reduce((accumulator, collection) => {
+    accumulator[collection.title.toLowerCase()] = collection;
+    return accumulator;
+  }, {});
 };
 
 export const auth = firebase.auth();
